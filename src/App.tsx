@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HomePage } from "./pages/Home";
+import { LoginPage } from "./pages/Login";
+import { StoreInitializer } from "./components/StoreInitializer";
+import { ProfilePage } from "./pages/Profile";
+import { RequiresAuth } from "./components/RequitesAuth";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App px-4 py-6">
+            <StoreInitializer />
+            <Router>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route
+                        path="/profile"
+                        element={
+                            <RequiresAuth>
+                                <ProfilePage />
+                            </RequiresAuth>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </div>
+    );
 }
 
 export default App;
