@@ -1,17 +1,23 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useMainStore } from "../lib/store/store";
 import { Input } from "../components/UI/Input";
 import { Button } from "../components/UI/Button";
 import { logOut, updateProfile } from "../lib/auth";
 import { Navbar } from "../components/Navbar";
+import { User } from "firebase/auth";
 import { getAuth, updateEmail, updateProfile as firebaseUpdateProfile } from "firebase/auth";
 
 export const ProfilePage = () => {
+    const auth = getAuth();
     const user = useMainStore(state => state.user) as User;
-    const [name, setName] = useState<string>(user.name || '');
-    const [email, setEmail] = useState<string>(user.email || '');
-    const [isDisabled, setIsDisabled] = useState<boolean>(false);
+    const [name, setName] = useState(user.displayName || '');
+    const [email, setEmail] = useState(user.email || '');
+    const [isDisabled, setIsDisabled] = useState(false);
+
+    useEffect(() => {
+        // Check if the user logged in using Google
+        setIsDisabled(user.providerData.some(p => p.providerId === 'google.com'));
+    }, [user.providerData]);
 
     const handleUpdate = async () => {
         if (!name || !email) {
@@ -19,12 +25,15 @@ export const ProfilePage = () => {
             return;
         }
         try {
-//          await firebaseUpdateProfile(user, { displayName: name });
-            await updateProfile(user.id, { name, email });
-            console.log(user,user.id, name, email)
+            // Update profile in Firebase Authentication
+            await firebaseUpdateProfile(user, { displayName: name });
+            await updateEmail(user, email);
+            // Optional: Update the user's profile in your Firebase Realtime Database
+            await updateProfile(user.uid, { name, email });
             alert("Profile updated successfully!");
         } catch (error) {
             console.error("Error updating profile:", error);
+            alert(error.message);
         }
     };
 
@@ -34,7 +43,7 @@ export const ProfilePage = () => {
             <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
                 <Input
                     value={name}
-                    onChange={(newValue) => setName(newValue)}
+                    onChange={e => setName(e.target.value)}
                     label="Name"
                     type="text"
                     placeholder="Name and Surname"
@@ -42,7 +51,7 @@ export const ProfilePage = () => {
                 />
                 <Input
                     value={email}
-                    onChange={(newValue) => setEmail(newValue)}
+                    onChange={e => setEmail(e.target.value)}
                     label="Email"
                     type="email"
                     placeholder="example@gmail.com"
