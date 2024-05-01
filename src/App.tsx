@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/Login";
 import { StoreInitializer } from "./components/StoreInitializer";
 import { ProfilePage } from "./pages/Profile";
 import { RequiresAuth } from "./components/RequitesAuth";
+import { EventDetails } from "./pages/EventDetails";
 
 function App() {
     return (
@@ -19,6 +20,14 @@ function App() {
                         element={
                             <RequiresAuth>
                                 <ProfilePage />
+                            </RequiresAuth>
+                        }
+                    />
+                    <Route
+                        path="/event/:id"
+                        element={
+                            <RequiresAuth>
+                                <EventDetails />
                             </RequiresAuth>
                         }
                     />
