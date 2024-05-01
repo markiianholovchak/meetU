@@ -12,7 +12,7 @@ const NavbarButton = ({ link, children }: NavbarButtonProps) => {
     const isActive = location.pathname === link;
     return (
         <Link to={link}>
-            <div className={`flex h-9 w-9 items-center gap-2 ${isActive ? " text-crimson" : ""}`}>
+            <div className={`flex h-8 w-8 items-center gap-2 ${isActive ? " text-crimson" : ""}`}>
                 {children}
             </div>
         </Link>
@@ -20,9 +20,8 @@ const NavbarButton = ({ link, children }: NavbarButtonProps) => {
 };
 
 export const Navbar = () => {
-    const location = useLocation();
     return (
-        <div className="fixed bottom-0 left-0 right-0 flex justify-center py-2">
+        <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-gray-900 bg-opacity-70 py-2 backdrop-blur backdrop-filter">
             <div className="flex w-max items-center gap-12">
                 <NavbarButton link="/">
                     <IoIosSearch className="h-full w-full fill-current" />
