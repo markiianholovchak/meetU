@@ -6,6 +6,14 @@ import { StoreInitializer } from "./components/StoreInitializer";
 import { ProfilePage } from "./pages/Profile";
 import { RequiresAuth } from "./components/RequitesAuth";
 import { EventDetails } from "./pages/EventDetails";
+import {
+    PATH_EVENT_TEMPLATE,
+    PATH_HOME,
+    PATH_LOGIN,
+    PATH_MY_EVENTS,
+    PATH_PROFILE
+} from "./lib/paths";
+import { MyEvents } from "./pages/MyEvents";
 
 function App() {
     return (
@@ -13,10 +21,11 @@ function App() {
             <StoreInitializer />
             <Router>
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path={PATH_HOME} element={<HomePage />} />
+                    <Route path={PATH_LOGIN} element={<LoginPage />} />
+                    <Route path={PATH_MY_EVENTS} element={<MyEvents />} />
                     <Route
-                        path="/profile"
+                        path={PATH_PROFILE}
                         element={
                             <RequiresAuth>
                                 <ProfilePage />
@@ -24,7 +33,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/event/:id"
+                        path={PATH_EVENT_TEMPLATE}
                         element={
                             <RequiresAuth>
                                 <EventDetails />

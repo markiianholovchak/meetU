@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { useMainStore } from "../lib/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../components/UI/Input";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineSort } from "react-icons/md";
 import { EventCard } from "../components/EventCard";
 import { MOCK_EVENT } from "../lib/constants/mock";
+import { getEvents } from "../lib/api/events";
 
 const CATEGORIES = ["Sport", "Culture", "Drinks", "Science", "Clubs", "Travel"];
 
@@ -30,6 +31,12 @@ const CategoriesList = () => {
 export const HomePage = () => {
     const user = useMainStore(state => state.user);
     const [query, setQuery] = useState("");
+    const [events, setEvents] = useState<CreatedEvent[]>([]);
+    getEvents();
+
+    useEffect(() => {
+        getEvents().then(events => setEvents(events));
+    });
     return (
         <>
             <div className="flex flex-col gap-2">
@@ -50,12 +57,9 @@ export const HomePage = () => {
                         </div>
                     </div>
                     <div className="mb-8 flex flex-col gap-4">
-                        <EventCard event={MOCK_EVENT} />
-                        <EventCard event={MOCK_EVENT} />
-                        <EventCard event={MOCK_EVENT} />
-                        <EventCard event={MOCK_EVENT} />
-                        <EventCard event={MOCK_EVENT} />
-                        <EventCard event={MOCK_EVENT} />
+                        {events.map(event => {
+                            return <EventCard key={event.id} event={event} />;
+                        })}
                     </div>
                 </div>
             </div>
