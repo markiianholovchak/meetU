@@ -28,7 +28,7 @@ export const signInWithEmail = async (email: string, password: string) => {
     }
 };
 
-async function getUserData(userId: string) {
+export async function getUserData(userId: string) {
   const userRef = ref(database, `users/${userId}`);
   try {
     const snapshot = await get(userRef);

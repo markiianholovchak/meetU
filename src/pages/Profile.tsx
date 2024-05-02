@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMainStore } from "../lib/store/store";
 import { Input } from "../components/UI/Input";
 import { Button } from "../components/UI/Button";
-import { logOut, updateProfile } from "../lib/auth";
+import { logOut, updateProfile, getUserData } from "../lib/auth";
 import { Navbar } from "../components/Navbar";
 import { getAuth, updateEmail, updateProfile as firebaseUpdateProfile } from "firebase/auth";
 
@@ -20,6 +20,7 @@ export const ProfilePage = () => {
         }
         try {
 //          await firebaseUpdateProfile(user, { displayName: name });
+            await getUserData(user.id);
             await updateProfile(user.id, { name, email });
             console.log(user,user.id, name, email)
             alert("Profile updated successfully!");
@@ -31,7 +32,9 @@ export const ProfilePage = () => {
     return (
         <div className="flex flex-col gap-4">
             <p className="text-primaryText text-center text-2xl">Profile Information</p>
-            <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
+            <form className="flex flex-col gap-4" onSubmit={(e) => {
+            e.preventDefault();
+             handleUpdate(); }}>
                 <Input
                     value={name}
                     onChange={(newValue) => setName(newValue)}

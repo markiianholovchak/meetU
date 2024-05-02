@@ -53,6 +53,7 @@ export const HomePage = () => {
                     </div>
                 </div>
                 <Link to={"/login"}>Log in</Link>
+                <Link to={"/Register"}>Register</Link>
             </div>
             <Navbar />
         </>
