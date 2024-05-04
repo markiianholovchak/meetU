@@ -8,7 +8,7 @@ import { HashRouter as Router } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
     <React.StrictMode>
-        <Router basename="https://markiianholovchak.github.io/meetU">
+        <Router basename={process.env.PUBLIC_URL}>
             <App />
         </Router>
     </React.StrictMode>
