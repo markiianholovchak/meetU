@@ -34,10 +34,12 @@ export const EventDetails = () => {
                         </div>
                     </div>
                 )}
+                {!!event.coordinates.lat && (
+                    <div className="relative h-[350px] w-full">
+                        <Map markers={[event.coordinates]} />
+                    </div>
+                )}
 
-                <div className="relative h-[350px] w-full">
-                    <Map markers={[event.coordinates]} />
-                </div>
                 <TakePartButton event={event} />
             </div>
         </div>

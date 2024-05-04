@@ -28,9 +28,10 @@ export const DetailsStep = () => {
                 onChange={setTitle}
                 label="Title"
                 placeholder="Add a catching title"
+                required
             />
 
-            <WithLabel label="Category">
+            <WithLabel label="Category" required>
                 <Select<string>
                     selected={editedEvent.category}
                     onChange={category => category && setCategory(category)}
@@ -40,6 +41,7 @@ export const DetailsStep = () => {
             </WithLabel>
 
             <TextArea
+                required
                 value={editedEvent.description}
                 onChange={setDescription}
                 label="Description"

@@ -71,13 +71,17 @@ export const EventCard = ({ event, withAdminPanel }: EventCardProps) => {
                         <p className="font-semibold">{event.title}</p>
                         <div className="flex items-center gap-1 ">
                             <IoLocationOutline />
-                            <p className="text-xs">{event.location}</p>
+                            <p className="text-xs">
+                                {event.locationType === "offline" ? event.location : "Online"}
+                            </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-1">
                         <FaRegClock />
                         <p className="text-xs">
-                            {event.startTime} - {event.endTime}
+                            {!event.startTime && !event.endTime
+                                ? "All day"
+                                : `${event.startTime || "00:00"} - ${event.endTime || "00:00"}`}
                         </p>
                     </div>
                 </div>

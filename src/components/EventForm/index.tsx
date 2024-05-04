@@ -8,6 +8,7 @@ import { DetailsStep } from "./steps/DetailsStep";
 import { ParticipantsStep } from "./steps/ParticipantsStep";
 import { mutate } from "swr";
 import { USER_CREATED_EVENTS } from "../../lib/paths";
+import { useMemo } from "react";
 
 const steps = [
     {
@@ -65,6 +66,21 @@ const StepButtons = () => {
 
     const coverImage = useMainStore(state => state.coverImageFile);
 
+    const editedEvent = useMainStore(state => state.editedEvent);
+
+    const isStepFormValid = useMemo(() => {
+        if (currentStep === 0) {
+            return (
+                !!editedEvent.title.trim().length &&
+                !!editedEvent.category &&
+                !!editedEvent.description.trim().length
+            );
+        }
+        if (currentStep === 1) {
+            return !!editedEvent.date && !!editedEvent.location;
+        }
+    }, [editedEvent, currentStep]);
+
     const handleCancel = () => {
         setIsFormOpen(false);
         resetForm();
@@ -105,7 +121,7 @@ const StepButtons = () => {
                     Create event
                 </Button>
             ) : (
-                <Button variant="primary" onClick={handleNext}>
+                <Button variant="primary" onClick={handleNext} disabled={!isStepFormValid}>
                     Next
                 </Button>
             )}

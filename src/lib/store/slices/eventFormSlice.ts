@@ -18,6 +18,7 @@ export type EventFormSlice = {
     setEditedEventDate: (date: Date) => void;
     setEditedEventStartTime: (time: string) => void;
     setEditedEventEndTime: (time: string) => void;
+    setEditedEventCoordinates: (coordinates: MapCoordinates) => void;
 
     coverImageFile: File | null;
     setCoverImageFile: (file: File | null) => void;
@@ -64,5 +65,7 @@ export const createEventFormSlice: StateCreator<EventFormSlice, [], [], EventFor
     setEditedEventStartTime: startTime => set({ editedEvent: { ...get().editedEvent, startTime } }),
     setEditedEventEndTime: endTime => set({ editedEvent: { ...get().editedEvent, endTime } }),
     coverImageFile: null,
-    setCoverImageFile: file => set({ coverImageFile: file })
+    setCoverImageFile: file => set({ coverImageFile: file }),
+    setEditedEventCoordinates: coordinates =>
+        set({ editedEvent: { ...get().editedEvent, coordinates } })
 });

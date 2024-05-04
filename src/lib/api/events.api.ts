@@ -25,8 +25,10 @@ export const createEvent = async (event: CreateEventData, user: User): Promise<C
     };
 };
 
-export const getEvents = async (): Promise<CreatedEvent[]> => {
-    const q = query(collection(db, "events"));
+export const getEvents = async (categoryFilter: string | null): Promise<CreatedEvent[]> => {
+    const q = categoryFilter
+        ? query(collection(db, "events"), where("category", "==", categoryFilter))
+        : query(collection(db, "events"));
     const querySnapshot = await getDocs(q);
     const events = await Promise.all(
         querySnapshot.docs.map(async doc => {

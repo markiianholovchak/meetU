@@ -5,12 +5,22 @@ type InputProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "value" | "o
     value: string;
     onChange: (value: string) => void;
     leftIcon?: ReactNode;
+    required?: boolean;
 };
-export const TextArea = ({ value, onChange, label, leftIcon, className, ...props }: InputProps) => {
+export const TextArea = ({
+    value,
+    onChange,
+    required,
+    label,
+    leftIcon,
+    className,
+    ...props
+}: InputProps) => {
     return (
         <div className={`flex h-full w-full flex-col `}>
             <label htmlFor={label} className="font-medium text-primaryText">
                 {label}
+                {required && <span className="text-crimson">*</span>}
             </label>
             <div className="flex items-center gap-2 rounded-md bg-darkGray px-3 py-2">
                 {leftIcon}

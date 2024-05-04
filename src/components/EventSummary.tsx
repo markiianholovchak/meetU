@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
 import { useSWRConfig } from "swr";
 import { leaveEvent, takePartInEvent } from "../lib/api/events.api";
-import { PATH_EVENT_DETAILS } from "../lib/paths";
+import { PATH_EVENT_DETAILS, PATH_EVENT_SETTINGS } from "../lib/paths";
 import { useMainStore } from "../lib/store/store";
 import { Button } from "./UI/Button";
+import { Link } from "react-router-dom";
 
 type TakePartButtonProps = {
     event: CreatedEvent;
@@ -12,6 +13,7 @@ type TakePartButtonProps = {
 export const TakePartButton = ({ event }: TakePartButtonProps) => {
     const user = useMainStore(state => state.user)!;
     const userParticipant = event.participants.find(participant => participant.user.id === user.id);
+    const isUserOwner = event.createdBy?.id === user.id;
     const hasUserJoinedEvent = !!userParticipant;
 
     const { mutate } = useSWRConfig();
@@ -26,6 +28,17 @@ export const TakePartButton = ({ event }: TakePartButtonProps) => {
         await takePartInEvent(event.id, user.id);
         mutate(PATH_EVENT_DETAILS(event.id));
     };
+
+    if (isUserOwner) {
+        return (
+            <Link
+                className="rounded-md bg-crimson px-4 py-2 text-center text-sm"
+                to={PATH_EVENT_SETTINGS(event.id)}
+            >
+                Manage
+            </Link>
+        );
+    }
 
     return (
         <>
@@ -69,12 +82,16 @@ export const EventSummary = ({ event, isAdminPage }: EventSummaryProps) => {
                     alt="Event cover"
                 />
             </div>
-            <div className="flex items-center justify-between">
-                <div>
+            <div className="flex items-center justify-between gap-4">
+                <div className="overflow-hidden">
                     <p className="font-medium">{event.title}</p>
-                    <p className="text-gray-100 opacity-50">{event.location}</p>
+                    <p className=" truncate text-gray-100 opacity-50">{event.location}</p>
                 </div>
-                {!isAdminPage && <TakePartButton event={event} />}
+                {!isAdminPage && (
+                    <div className="flex-shrink-0">
+                        <TakePartButton event={event} />
+                    </div>
+                )}
             </div>
             <div className="flex gap-6">
                 <div>
@@ -98,6 +115,13 @@ export const EventSummary = ({ event, isAdminPage }: EventSummaryProps) => {
             <p className="text-sm text-gray-100 ">
                 <span className="font-medium text-white opacity-100">About this event:</span>{" "}
                 <span className="text-gray-100 opacity-50">{event.description}</span>
+            </p>
+
+            <p className="text-sm text-gray-100 ">
+                <span className="font-medium text-white opacity-100">
+                    {event.locationType === "online" ? "Online location" : "Address"}{" "}
+                </span>
+                <span className="text-gray-100 opacity-50">{event.location}</span>
             </p>
         </div>
     );
