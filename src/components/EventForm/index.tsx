@@ -1,10 +1,13 @@
-import { createEvent } from "../../lib/api/events";
+import { createEvent } from "../../lib/api/events.api";
+import { uploadFileToStorage } from "../../lib/api/storage.api";
 import { useMainStore } from "../../lib/store/store";
 import { Button } from "../UI/Button";
 import Modal from "../UI/Modal";
 import { DateLocationStep } from "./steps/DateLocationStep.tsx";
 import { DetailsStep } from "./steps/DetailsStep";
 import { ParticipantsStep } from "./steps/ParticipantsStep";
+import { mutate } from "swr";
+import { USER_CREATED_EVENTS } from "../../lib/paths";
 
 const steps = [
     {
@@ -58,6 +61,9 @@ const StepButtons = () => {
     const setCurrentStep = useMainStore(state => state.setCurrentEventFormStep);
     const resetForm = useMainStore(state => state.resetForm);
     const setIsFormOpen = useMainStore(state => state.setIsEventFormOpen);
+    const user = useMainStore(state => state.user)!;
+
+    const coverImage = useMainStore(state => state.coverImageFile);
 
     const handleCancel = () => {
         setIsFormOpen(false);
@@ -72,8 +78,15 @@ const StepButtons = () => {
         setCurrentStep(currentStep + 1);
     };
 
-    const handleCreateEvent = () => {
-        createEvent(useMainStore.getState().editedEvent);
+    const handleCreateEvent = async () => {
+        const eventData = { ...useMainStore.getState().editedEvent };
+        if (coverImage) {
+            const imageUrl = await uploadFileToStorage(coverImage);
+            eventData.coverImage = imageUrl;
+        }
+        createEvent(eventData, user);
+        mutate(USER_CREATED_EVENTS(user.id));
+        handleCancel();
     };
     return (
         <div className="flex justify-end gap-6">

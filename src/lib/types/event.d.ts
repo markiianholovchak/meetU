@@ -26,4 +26,7 @@ type CreateEventData = {
     maxParticipants?: number;
 };
 
-type CreatedEvent = DB_ENTITY & CreateEventData;
+type CreatedEvent = DB_ENTITY &
+    CreateEventData & {
+        createdBy: User | null;
+    };

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { useMainStore } from "../lib/store/store";
 import { useEffect, useState } from "react";
@@ -6,8 +5,7 @@ import { Input } from "../components/UI/Input";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineSort } from "react-icons/md";
 import { EventCard } from "../components/EventCard";
-import { MOCK_EVENT } from "../lib/constants/mock";
-import { getEvents } from "../lib/api/events";
+import { getEvents } from "../lib/api/events.api";
 
 const CATEGORIES = ["Sport", "Culture", "Drinks", "Science", "Clubs", "Travel"];
 

@@ -11,6 +11,7 @@ export const DetailsStep = () => {
     const setTitle = useMainStore(state => state.setEditedEventTitle);
     const setDescription = useMainStore(state => state.setEditedEventDescription);
     const setCategory = useMainStore(state => state.setEditedEventCategory);
+    const setCoverImageFile = useMainStore(state => state.setCoverImageFile);
 
     const categoryOptions: SelectItem<string>[] = useMemo(() => {
         return CATEGORIES.map(category => {
@@ -44,6 +45,10 @@ export const DetailsStep = () => {
                 label="Description"
                 placeholder="What will happen on your event?"
             />
+
+            <WithLabel label="Cover image">
+                <input type="file" onChange={e => setCoverImageFile(e.target.files?.[0] || null)} />
+            </WithLabel>
         </div>
     );
 };

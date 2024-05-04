@@ -1,14 +1,25 @@
 import { FaChevronLeft } from "react-icons/fa";
-import { MOCK_EVENT } from "../lib/constants/mock";
 import { Button } from "../components/UI/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa6";
 import dayjs from "dayjs";
 import { Map } from "../components/Map";
+import { useEffect, useState } from "react";
+import { getEvent } from "../lib/api/events.api";
 
 export const EventDetails = () => {
-    const event = MOCK_EVENT;
+    const [event, setEvent] = useState<CreatedEvent | null>(null);
     const navigate = useNavigate();
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (!id) return;
+        getEvent(id).then(event => setEvent(event));
+    }, []);
+
+    console.log(event?.createdBy);
+
+    if (!event) return <div>Loading...</div>;
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -60,7 +71,9 @@ export const EventDetails = () => {
                         </p>
                     </div>
                     <div>
-                        <p className="text-sm font-medium">4</p>
+                        <p className="text-sm font-medium">
+                            {event.maxParticipants || "Unlimited"}
+                        </p>
                         <p className="text-xs text-gray-100 opacity-50">Places left</p>
                     </div>
                 </div>
@@ -69,17 +82,25 @@ export const EventDetails = () => {
                     <span className="font-medium text-white opacity-100">About this event:</span>{" "}
                     <span className="text-gray-100 opacity-50">{event.description}</span>
                 </p>
-
-                <div>
-                    <p className="text-sm font-medium">Organizer:</p>
-                    <div className="mt-2 flex items-center gap-2">
-                        <div className="w-max rounded-full border border-border p-2">AV</div>
-                        <div>
-                            <p className="text-sm font-medium">Party animals LLC</p>
-                            <p className="text-xs text-gray-100 opacity-50">25 organized Events</p>
+                {event.createdBy && (
+                    <div>
+                        <p className="text-sm font-medium">Organizer:</p>
+                        <div className="mt-2 flex items-center gap-2">
+                            <img
+                                src={event.createdBy.image || ""}
+                                alt="Avatar"
+                                className="h-8 w-8 rounded-full border-border"
+                            />
+                            <div>
+                                <p className="text-sm font-medium">{event.createdBy.name}</p>
+                                {/* <p className="text-xs text-gray-100 opacity-50">
+                                    25 organized Events
+                                </p> */}
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
+
                 <div className="relative h-[350px] w-full">
                     <Map markers={[event.coordinates]} />
                 </div>

@@ -18,6 +18,9 @@ export type EventFormSlice = {
     setEditedEventDate: (date: Date) => void;
     setEditedEventStartTime: (time: string) => void;
     setEditedEventEndTime: (time: string) => void;
+
+    coverImageFile: File | null;
+    setCoverImageFile: (file: File | null) => void;
 };
 export const createEventFormSlice: StateCreator<EventFormSlice, [], [], EventFormSlice> = (
     set,
@@ -28,7 +31,7 @@ export const createEventFormSlice: StateCreator<EventFormSlice, [], [], EventFor
     currentEventFormStep: 0,
     setCurrentEventFormStep: step => set({ currentEventFormStep: step }),
     resetForm: () => {
-        set({ currentEventFormStep: 0 });
+        set({ currentEventFormStep: 0, coverImageFile: null });
     },
     editedEvent: createEmptyEvent(),
     setEditedEvent: event => {
@@ -59,5 +62,7 @@ export const createEventFormSlice: StateCreator<EventFormSlice, [], [], EventFor
         set({ editedEvent: { ...get().editedEvent, maxParticipants } }),
     setEditedEventDate: date => set({ editedEvent: { ...get().editedEvent, date } }),
     setEditedEventStartTime: startTime => set({ editedEvent: { ...get().editedEvent, startTime } }),
-    setEditedEventEndTime: endTime => set({ editedEvent: { ...get().editedEvent, endTime } })
+    setEditedEventEndTime: endTime => set({ editedEvent: { ...get().editedEvent, endTime } }),
+    coverImageFile: null,
+    setCoverImageFile: file => set({ coverImageFile: file })
 });

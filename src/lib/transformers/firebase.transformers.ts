@@ -1,5 +1,5 @@
 import { User as FirebaseUser } from "firebase/auth";
-import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { DocumentData } from "firebase/firestore";
 
 export const firebaseUserToUser = (user: FirebaseUser): User => {
     return {
@@ -11,12 +11,14 @@ export const firebaseUserToUser = (user: FirebaseUser): User => {
 };
 
 export const fireBaseEventDocToEvent = (
-    doc: QueryDocumentSnapshot<DocumentData, DocumentData>
+    docId: string,
+    docData: DocumentData,
+    createdBy: User | null
 ): CreatedEvent => {
-    const docData = doc.data();
     return {
         ...docData,
         date: new Date(docData.date.seconds * 1000),
-        id: doc.id
+        id: docId,
+        createdBy
     } as CreatedEvent;
 };
