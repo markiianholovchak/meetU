@@ -21,30 +21,29 @@ function App() {
     return (
         <div className="App px-4 py-6">
             <StoreInitializer />
-            <Router>
-                <Routes>
-                    <Route path={PATH_HOME} element={<HomePage />} />
-                    <Route path={PATH_LOGIN} element={<LoginPage />} />
-                    <Route path={PATH_MY_EVENTS} element={<MyEvents />} />
-                    <Route path={PATH_EVENT_SETTINGS_TEMPLATE} element={<EventSettings />} />
-                    <Route
-                        path={PATH_PROFILE}
-                        element={
-                            <RequiresAuth>
-                                <ProfilePage />
-                            </RequiresAuth>
-                        }
-                    />
-                    <Route
-                        path={PATH_EVENT_TEMPLATE}
-                        element={
-                            <RequiresAuth>
-                                <EventDetails />
-                            </RequiresAuth>
-                        }
-                    />
-                </Routes>
-            </Router>
+
+            <Routes>
+                <Route path={PATH_HOME} element={<HomePage />} />
+                <Route path={PATH_LOGIN} element={<LoginPage />} />
+                <Route path={PATH_MY_EVENTS} element={<MyEvents />} />
+                <Route path={PATH_EVENT_SETTINGS_TEMPLATE} element={<EventSettings />} />
+                <Route
+                    path={PATH_PROFILE}
+                    element={
+                        <RequiresAuth>
+                            <ProfilePage />
+                        </RequiresAuth>
+                    }
+                />
+                <Route
+                    path={PATH_EVENT_TEMPLATE}
+                    element={
+                        <RequiresAuth>
+                            <EventDetails />
+                        </RequiresAuth>
+                    }
+                />
+            </Routes>
         </div>
     );
 }
