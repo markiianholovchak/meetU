@@ -26,7 +26,16 @@ type CreateEventData = {
     maxParticipants?: number;
 };
 
+type ParticipantStatus = "accepted" | "declined" | "needsAction";
+
+type Participant = {
+    id: string;
+    user: User;
+    status: ParticipantStatus;
+};
+
 type CreatedEvent = DB_ENTITY &
     CreateEventData & {
         createdBy: User | null;
+        participants: Participant[];
     };

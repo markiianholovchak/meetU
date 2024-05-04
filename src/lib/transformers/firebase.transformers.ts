@@ -17,6 +17,7 @@ export const fireBaseEventDocToEvent = (
 ): CreatedEvent => {
     return {
         ...docData,
+        participants: [] as Participant[],
         date: new Date(docData.date.seconds * 1000),
         id: docId,
         createdBy

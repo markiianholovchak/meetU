@@ -33,7 +33,6 @@ export const DateLocationStep = () => {
                         <input
                             value={dayjs(editedEvent.date).format("YYYY-MM-DD")}
                             onChange={e => {
-                                console.log(e.target.value);
                                 setDate(new Date(e.target.value));
                             }}
                             type="date"

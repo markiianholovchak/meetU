@@ -1,4 +1,15 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    or,
+    query,
+    updateDoc,
+    where
+} from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { fireBaseEventDocToEvent } from "../transformers/firebase.transformers";
 import { getUser } from "./users.api";
@@ -9,12 +20,14 @@ export const createEvent = async (event: CreateEventData, user: User): Promise<C
     return {
         ...event,
         id: docRef.id,
-        createdBy: user
+        createdBy: user,
+        participants: []
     };
 };
 
 export const getEvents = async (): Promise<CreatedEvent[]> => {
-    const querySnapshot = await getDocs(collection(db, "events"));
+    const q = query(collection(db, "events"));
+    const querySnapshot = await getDocs(q);
     const events = await Promise.all(
         querySnapshot.docs.map(async doc => {
             const data = doc.data();
@@ -32,9 +45,10 @@ export const getEvent = async (id: string): Promise<CreatedEvent | null> => {
     const data = querySnapshot.data();
     if (!data) return null;
     const createdBy = data.createdById ? await getUser(data.createdById) : null;
+    const participants = await getEventParticipants(id);
     const event = fireBaseEventDocToEvent(id, data, createdBy);
 
-    return event;
+    return { ...event, participants };
 };
 
 export const getUserCreatedEvents = async (userId: string): Promise<CreatedEvent[]> => {
@@ -43,10 +57,69 @@ export const getUserCreatedEvents = async (userId: string): Promise<CreatedEvent
     const events = await Promise.all(
         querySnapshot.docs.map(async doc => {
             const data = doc.data();
+            console.log(data, "doc data");
             const user = data.createdById ? await getUser(data.createdById) : null;
             return fireBaseEventDocToEvent(doc.id, data, user);
         })
     );
 
     return events;
+};
+
+export const getUserBookedEvents = async (userId: string): Promise<CreatedEvent[]> => {
+    const q = query(collection(db, "events"));
+    const querySnapshot = await getDocs(q);
+    const bookedEvents: CreatedEvent[] = [];
+    await Promise.all(
+        querySnapshot.docs.map(async doc => {
+            const participants = await getEventParticipants(doc.id);
+            if (!participants.find(participant => participant.user.id === userId)) return;
+            const data = doc.data();
+            const user = data.createdById ? await getUser(data.createdById) : null;
+            bookedEvents.push(fireBaseEventDocToEvent(doc.id, data, user));
+        })
+    );
+
+    return bookedEvents;
+};
+
+export const takePartInEvent = async (eventId: string, userId: string) => {
+    await addDoc(collection(db, "events", eventId, "participants"), {
+        userId,
+        status: "needsAction"
+    });
+};
+
+export const leaveEvent = async (eventId: string, participantId: string) => {
+    await deleteDoc(doc(db, "events", eventId, "participants", participantId));
+};
+
+export const deleteEvent = async (eventId: string) => {
+    await deleteDoc(doc(db, "events", eventId));
+};
+
+export const getEventParticipants = async (eventId: string): Promise<Participant[]> => {
+    const q = query(collection(db, "events", eventId, "participants"));
+    const querySnapshot = await getDocs(q);
+    const participants = await Promise.all(
+        querySnapshot.docs.map(async doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                user: await getUser(data.userId),
+                status: data.status
+            } as Participant;
+        })
+    );
+
+    return participants;
+};
+
+export const updateParticipant = async (
+    eventId: string,
+    id: string,
+    data: Partial<Participant>
+) => {
+    const participantDoc = doc(db, "events", eventId, "participants", id);
+    await updateDoc(participantDoc, data);
 };

@@ -4,12 +4,14 @@ import { useMainStore } from "../lib/store/store";
 import { EventFormModal } from "../components/EventForm";
 import { useUserCreatedEvents } from "../lib/hooks/api/useUserCreatedEvents";
 import { EventCard } from "../components/EventCard";
+import { useUserBookedEvents } from "../lib/hooks/api/useUserBookedEvents";
 
 export const MyEvents = () => {
     const addEvent = useMainStore(state => state.setEditedEvent);
     const user = useMainStore(state => state.user)!;
 
     const { data } = useUserCreatedEvents(user.id);
+    const { data: BookedEvents } = useUserBookedEvents(user.id);
 
     return (
         <div>
@@ -23,6 +25,12 @@ export const MyEvents = () => {
             </div>
             <div className="mb-8 flex flex-col gap-4">
                 {data?.map(event => {
+                    return <EventCard key={event.id} event={event} withAdminPanel />;
+                })}
+            </div>
+            <div className="mb-8 flex flex-col gap-4">
+                Booked events:
+                {BookedEvents?.map(event => {
                     return <EventCard key={event.id} event={event} />;
                 })}
             </div>

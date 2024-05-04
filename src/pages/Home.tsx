@@ -1,11 +1,11 @@
 import { Navbar } from "../components/Navbar";
 import { useMainStore } from "../lib/store/store";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Input } from "../components/UI/Input";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineSort } from "react-icons/md";
 import { EventCard } from "../components/EventCard";
-import { getEvents } from "../lib/api/events.api";
+import { useSearchEvents } from "../lib/hooks/api/useSearchEvents";
 
 const CATEGORIES = ["Sport", "Culture", "Drinks", "Science", "Clubs", "Travel"];
 
@@ -29,12 +29,18 @@ const CategoriesList = () => {
 export const HomePage = () => {
     const user = useMainStore(state => state.user);
     const [query, setQuery] = useState("");
-    const [events, setEvents] = useState<CreatedEvent[]>([]);
-    getEvents();
+    const { data: events, isLoading } = useSearchEvents(query);
 
-    useEffect(() => {
-        getEvents().then(events => setEvents(events));
-    });
+    const filteredData = useMemo(() => {
+        return events?.filter(event => {
+            return (
+                event.title.includes(query) ||
+                event.description.includes(query) ||
+                event.category.includes(query) ||
+                event.location.includes(query)
+            );
+        });
+    }, [events, query]);
     return (
         <>
             <div className="flex flex-col gap-2">
@@ -55,7 +61,8 @@ export const HomePage = () => {
                         </div>
                     </div>
                     <div className="mb-8 flex flex-col gap-4">
-                        {events.map(event => {
+                        {isLoading && <p>Loading...</p>}
+                        {filteredData?.map(event => {
                             return <EventCard key={event.id} event={event} />;
                         })}
                     </div>

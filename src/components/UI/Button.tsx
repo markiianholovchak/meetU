@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant: ButtonVariant;
+    variant?: ButtonVariant;
 };
 export const Button = ({ children, variant = "primary", ...props }: ButtonProps) => {
     const commonStyles = "rounded px-4 py-2";
@@ -12,7 +12,10 @@ export const Button = ({ children, variant = "primary", ...props }: ButtonProps)
     };
 
     return (
-        <button {...props} className={` ${variantStyles[variant]} ${props.className}`}>
+        <button
+            {...props}
+            className={` ${variantStyles[variant]} ${props.className} ${props.disabled ? "opacity-50" : ""}`}
+        >
             {children}
         </button>
     );
