@@ -9,7 +9,6 @@ import { EventHeader } from "./UI/EventHeader";
 import { useMainStore } from "../lib/store/store";
 import { getAvatarUrl } from "../lib/helpers";
 import { useEffect } from "react";
-import { IoTrashBin } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
 type ParticipantItemProps = {
     eventId: string;
