@@ -1,12 +1,13 @@
 import { User as FirebaseUser } from "firebase/auth";
 import { DocumentData } from "firebase/firestore";
 
-export const firebaseUserToUser = (user: FirebaseUser): User => {
+export const firebaseUserToUser = (user: FirebaseUser, provider: AuthProvider): User => {
     return {
         id: user.uid,
         name: user.displayName,
         email: user.email,
-        image: user.photoURL
+        image: user.photoURL,
+        provider
     };
 };
 

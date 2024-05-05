@@ -59,7 +59,6 @@ export const getUserCreatedEvents = async (userId: string): Promise<CreatedEvent
     const events = await Promise.all(
         querySnapshot.docs.map(async doc => {
             const data = doc.data();
-            console.log(data, "doc data");
             const user = data.createdById ? await getUser(data.createdById) : null;
             return fireBaseEventDocToEvent(doc.id, data, user);
         })

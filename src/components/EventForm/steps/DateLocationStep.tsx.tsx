@@ -20,8 +20,6 @@ const LocationAutocomplete = () => {
         suggestions: { data },
         setValue
     } = usePlacesAutocomplete({
-        callbackName: "YOUR_CALLBACK_NAME",
-
         requestOptions: {
             /* Define search scope here */
         },
@@ -46,7 +44,6 @@ const LocationAutocomplete = () => {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             });
-            console.log(result);
             setValue(result);
             setLocation(result);
         });

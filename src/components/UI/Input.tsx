@@ -2,7 +2,7 @@ import { InputHTMLAttributes, ReactNode } from "react";
 
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange"> & {
     label?: string;
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
     leftIcon?: ReactNode;
     required?: boolean;

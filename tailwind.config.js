@@ -12,6 +12,7 @@ module.exports ={
           primaryText: "#EEEEEE",
           gray: {
             100: "#EEEEEE",
+            200: "#E6E6E6",
             700: "#3E4550",
             800: "#31363F",
             900: "#222831"
