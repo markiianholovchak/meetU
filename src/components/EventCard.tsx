@@ -1,7 +1,7 @@
 import { IoCalendarOutline } from "react-icons/io5";
 import { IoLocationOutline } from "react-icons/io5";
 import { FaRegClock, FaTrashCan } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { useMainStore } from "../lib/store/store";
 import { deleteEvent } from "../lib/api/events.api";

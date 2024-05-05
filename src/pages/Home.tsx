@@ -7,7 +7,7 @@ import { EventCard } from "../components/EventCard";
 import { useSearchEvents } from "../lib/hooks/api/useSearchEvents";
 import { coordinatesToAddress } from "../lib/helpers";
 import { IoClose } from "react-icons/io5";
-import { FaMapMarkerAlt, FaMarker } from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { EventCardsContainer } from "../components/UI/EventCardsContainer";
 
 const CATEGORIES = ["Sport", "Culture", "Drinks", "Science", "Clubs", "Travel"];
@@ -79,7 +79,7 @@ export const HomePage = () => {
                 coordinates: coords
             });
         });
-    }, []);
+    }, [setUserLocation]);
 
     return (
         <>

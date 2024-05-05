@@ -76,7 +76,7 @@ export const EventSettings = ({ eventId }: EventSettingsProps) => {
     const { mutate } = useSWRConfig();
 
     useEffect(() => {
-        if (!event) return;
+        if (!event?.participants.length) return;
 
         navigator.vibrate(200);
     }, [event?.participants.length]);
