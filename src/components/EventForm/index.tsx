@@ -64,9 +64,7 @@ const StepButtons = () => {
     const resetForm = useMainStore(state => state.resetForm);
     const setIsFormOpen = useMainStore(state => state.setIsEventFormOpen);
     const user = useMainStore(state => state.user)!;
-
     const coverImage = useMainStore(state => state.coverImageFile);
-
     const editedEvent = useMainStore(state => state.editedEvent);
 
     const isStepFormValid = useMemo(() => {
@@ -101,9 +99,12 @@ const StepButtons = () => {
             const imageUrl = await uploadFileToStorage(coverImage);
             eventData.coverImage = imageUrl;
         }
-        createEvent(eventData, user);
-        mutate(USER_CREATED_EVENTS(user.id));
         handleCancel();
+        try {
+            await createEvent(eventData, user);
+        } catch (err) {}
+
+        mutate(USER_CREATED_EVENTS(user.id));
     };
     return (
         <div className="flex justify-end gap-6">

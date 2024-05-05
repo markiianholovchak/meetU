@@ -8,15 +8,17 @@ import { AuthPageLayout } from "../components/UI/AuthPageLayout";
 import { uploadFileToStorage } from "../lib/api/storage.api";
 import { updateUser } from "../lib/api/users.api";
 import { getAvatarUrl } from "../lib/helpers";
+import useDeviceType from "../lib/hooks/useDeviceType";
+import { PATH_HOME } from "../lib/paths";
+import { Link } from "react-router-dom";
 
 export const ProfilePage = () => {
     const user = useMainStore(state => state.user) as User;
     const setUser = useMainStore(state => state.setUser);
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
-    const [coverImage, setCoverImage] = useState<File | null>(null);
+    const [successMessage, setSuccessMessage] = useState("");
 
-    const isFormDisabled = user.provider === "google.com";
     const photoInputRef = useRef<HTMLInputElement>(null);
 
     const onEditPhoto = () => {
@@ -24,7 +26,6 @@ export const ProfilePage = () => {
     };
 
     const handleChangeImage = async (file: File | null) => {
-        setCoverImage(file);
         if (file) {
             const path = await uploadFileToStorage(file);
             await updateUser(user.id, { image: path });
@@ -37,8 +38,6 @@ export const ProfilePage = () => {
         }
     };
 
-    console.log(coverImage);
-
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await updateUser(user.id, { name });
@@ -48,7 +47,10 @@ export const ProfilePage = () => {
         };
         setUser(updatedUser);
         updateSessionUser(updatedUser);
+        setSuccessMessage("Successfully updated your data");
     };
+
+    const { isMobile } = useDeviceType();
     return (
         <AuthPageLayout>
             <div className="flex flex-col gap-4">
@@ -74,7 +76,6 @@ export const ProfilePage = () => {
                     <Input
                         value={name || ""}
                         onChange={setName}
-                        disabled={isFormDisabled}
                         label="Name"
                         type="text"
                         placeholder="Name and Surname"
@@ -87,14 +88,16 @@ export const ProfilePage = () => {
                         type="email"
                         placeholder="example@gmail.com"
                     />
-                    <Button variant="primary" disabled={isFormDisabled}>
-                        Save
-                    </Button>
+                    {successMessage && <p className="text-lime">*{successMessage}</p>}
+                    <Button variant="primary">Save</Button>
                     <Button variant="outlined" onClick={logOut}>
                         Log out
                     </Button>
+                    <Link className="text-center text-gray-100 opacity-50" to={PATH_HOME}>
+                        Go to homepage
+                    </Link>
                 </form>
-                <Navbar />
+                {isMobile && <Navbar />}
             </div>
         </AuthPageLayout>
     );

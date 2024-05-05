@@ -1,5 +1,5 @@
 import { FaChevronDown, FaPlus } from "react-icons/fa";
-import { Navbar } from "../components/Navbar";
+import { DesktopNavbar, Navbar } from "../components/Navbar";
 import { useMainStore } from "../lib/store/store";
 import { EventFormModal } from "../components/EventForm";
 import { useUserCreatedEvents } from "../lib/hooks/api/useUserCreatedEvents";
@@ -8,6 +8,7 @@ import { useUserBookedEvents } from "../lib/hooks/api/useUserBookedEvents";
 import { PropsWithChildren } from "react";
 import { useDisclosure } from "../lib/hooks/useDisclosure";
 import { EventCardsContainer } from "../components/UI/EventCardsContainer";
+import useDeviceType from "../lib/hooks/useDeviceType";
 
 type EventsAccordeonProps = PropsWithChildren & {
     title: string;
@@ -33,13 +34,17 @@ export const MyEvents = () => {
     const addEvent = useMainStore(state => state.setEditedEvent);
     const user = useMainStore(state => state.user)!;
 
-    const { data } = useUserCreatedEvents(user.id);
-    const { data: bookedEvents } = useUserBookedEvents(user.id);
+    const { data, isLoading: userEventLoading } = useUserCreatedEvents(user.id);
+    const { data: bookedEvents, isLoading: bookedEventsLoading } = useUserBookedEvents(user.id);
+    const { isMobile } = useDeviceType();
 
     return (
-        <div className="flex flex-col gap-4">
-            <p className="text-2xl font-semibold">Your events</p>
-            <Navbar />
+        <div className="flex flex-col gap-4 ">
+            <div className="flex items-center justify-between">
+                <p className="text-2xl font-semibold">Your events</p>
+                {!isMobile && <DesktopNavbar />}
+            </div>
+            {isMobile && <Navbar />}
             <div
                 className="fixed bottom-14 right-4 rounded-full bg-crimson bg-opacity-75 p-4"
                 onClick={() => addEvent()}
@@ -52,6 +57,9 @@ export const MyEvents = () => {
                     {data?.map(event => {
                         return <EventCard key={event.id} event={event} withAdminPanel />;
                     })}
+                    {!userEventLoading && !data?.length && (
+                        <p className="text-gray-100 opacity-50">No events here yet</p>
+                    )}
                 </EventCardsContainer>
             </EventsAccordeon>
             <EventsAccordeon
@@ -61,6 +69,9 @@ export const MyEvents = () => {
                     {bookedEvents?.map(event => {
                         return <EventCard key={event.id} event={event} />;
                     })}
+                    {!bookedEventsLoading && !data?.length && (
+                        <p className="text-gray-100 opacity-50">No events here yet...</p>
+                    )}
                 </EventCardsContainer>
             </EventsAccordeon>
 

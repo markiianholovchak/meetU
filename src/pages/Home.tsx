@@ -1,4 +1,4 @@
-import { Navbar } from "../components/Navbar";
+import { DesktopNavbar, Navbar } from "../components/Navbar";
 import { useMainStore } from "../lib/store/store";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "../components/UI/Input";
@@ -9,6 +9,7 @@ import { coordinatesToAddress } from "../lib/helpers";
 import { IoClose } from "react-icons/io5";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { EventCardsContainer } from "../components/UI/EventCardsContainer";
+import useDeviceType from "../lib/hooks/useDeviceType";
 
 const CATEGORIES = ["Sport", "Culture", "Drinks", "Science", "Clubs", "Travel"];
 
@@ -56,6 +57,7 @@ export const HomePage = () => {
     const userLocation = useMainStore(state => state.userLocation);
     const setUserLocation = useMainStore(state => state.setUserLocation);
     const { data: events, isLoading } = useSearchEvents(categoryFilter);
+    const { isMobile } = useDeviceType();
 
     const filteredData = useMemo(() => {
         if (!query) return events;
@@ -92,9 +94,12 @@ export const HomePage = () => {
                         </div>
                     )}
 
-                    <p className="text-2xl font-semibold">
-                        {user ? `Hey, ${user.name}` : "Welcome to meetU!"}
-                    </p>
+                    <div className="flex justify-between">
+                        <p className="text-2xl font-semibold">
+                            {user ? `Hey, ${user.name}` : "Welcome to meetU!"}
+                        </p>
+                        {!isMobile && <DesktopNavbar />}
+                    </div>
                     <Input
                         value={query}
                         onChange={setQuery}
@@ -117,10 +122,13 @@ export const HomePage = () => {
                         {filteredData?.map(event => {
                             return <EventCard key={event.id} event={event} />;
                         })}
+                        {!isLoading && !filteredData?.length && (
+                            <p className="text-gray-100 opacity-50">No events found...</p>
+                        )}
                     </EventCardsContainer>
                 </div>
             </div>
-            <Navbar />
+            {isMobile && <Navbar />}
         </>
     );
 };

@@ -6,6 +6,7 @@ import {
     getDoc,
     getDocs,
     onSnapshot,
+    orderBy,
     query,
     updateDoc,
     where
@@ -15,6 +16,7 @@ import { fireBaseEventDocToEvent } from "../transformers/firebase.transformers";
 import { getUser } from "./users.api";
 import { mutate } from "swr";
 import { PATH_EVENT_DETAILS } from "../paths";
+import dayjs from "dayjs";
 
 export const createEvent = async (event: CreateEventData, user: User): Promise<CreatedEvent> => {
     const docRef = await addDoc(collection(db, "events"), { ...event, createdById: user.id });
@@ -28,9 +30,11 @@ export const createEvent = async (event: CreateEventData, user: User): Promise<C
 };
 
 export const getEvents = async (categoryFilter: string | null): Promise<CreatedEvent[]> => {
-    const q = categoryFilter
-        ? query(collection(db, "events"), where("category", "==", categoryFilter))
-        : query(collection(db, "events"));
+    const filters = [where("date", ">=", dayjs().startOf("day").toDate()), orderBy("date", "asc")];
+    if (categoryFilter) {
+        filters.push(where("category", "==", categoryFilter));
+    }
+    const q = query(collection(db, "events"), ...filters);
     const querySnapshot = await getDocs(q);
     const events = await Promise.all(
         querySnapshot.docs.map(async doc => {
@@ -60,7 +64,11 @@ export const getEvent = async (id: string): Promise<CreatedEvent | null> => {
 };
 
 export const getUserCreatedEvents = async (userId: string): Promise<CreatedEvent[]> => {
-    const q = query(collection(db, "events"), where("createdById", "==", userId));
+    const q = query(
+        collection(db, "events"),
+        orderBy("date", "asc"),
+        where("createdById", "==", userId)
+    );
     const querySnapshot = await getDocs(q);
     const events = await Promise.all(
         querySnapshot.docs.map(async doc => {
@@ -74,7 +82,7 @@ export const getUserCreatedEvents = async (userId: string): Promise<CreatedEvent
 };
 
 export const getUserBookedEvents = async (userId: string): Promise<CreatedEvent[]> => {
-    const q = query(collection(db, "events"));
+    const q = query(collection(db, "events"), orderBy("date", "asc"));
     const querySnapshot = await getDocs(q);
     const bookedEvents: CreatedEvent[] = [];
     await Promise.all(

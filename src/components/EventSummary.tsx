@@ -5,6 +5,11 @@ import { useMainStore } from "../lib/store/store";
 import { Button } from "./UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import useDeviceType from "../lib/hooks/useDeviceType";
+import {
+    PARTICIPANT_STATUS_COLOR,
+    PARTICIPANT_STATUS_MESSAGE
+} from "../lib/constants/event.constants";
+import { getEventCoverUrl } from "../lib/helpers";
 
 type TakePartButtonProps = {
     event: CreatedEvent;
@@ -65,7 +70,6 @@ export const TakePartButton = ({ event }: TakePartButtonProps) => {
             </Button>
         );
     }
-
     return (
         <>
             {hasUserJoinedEvent ? (
@@ -96,14 +100,19 @@ type EventSummaryProps = {
     isAdminPage?: boolean;
 };
 export const EventSummary = ({ event, isAdminPage }: EventSummaryProps) => {
+    const user = useMainStore(state => state.user);
     const placesLeft = event.maxParticipants
         ? event.maxParticipants - event.participants.length
         : null;
+
+    const userParticipant = event.participants.find(
+        participant => participant.user.id === user?.id
+    );
     return (
         <div className="flex flex-col gap-4">
             <div className="relative h-[250px] ">
                 <img
-                    src={event.coverImage}
+                    src={getEventCoverUrl(event)}
                     className=" h-full w-full rounded-xl object-cover object-center shadow-inner"
                     alt="Event cover"
                 />
@@ -143,12 +152,28 @@ export const EventSummary = ({ event, isAdminPage }: EventSummaryProps) => {
                 <span className="text-gray-100 opacity-50">{event.description}</span>
             </p>
 
-            <p className="text-sm text-gray-100 ">
+            <p className="flex gap-2 text-sm text-gray-100 ">
                 <span className="font-medium text-white opacity-100">
                     {event.locationType === "online" ? "Online location" : "Address"}{" "}
                 </span>
                 <span className="text-gray-100 opacity-50">{event.location}</span>
             </p>
+
+            {userParticipant && (
+                <p className="flex gap-2 text-sm text-gray-100 ">
+                    <span className="font-medium text-white opacity-100">
+                        Participation status:
+                    </span>
+                    <span
+                        className="t0"
+                        style={{
+                            color: PARTICIPANT_STATUS_COLOR[userParticipant.status]
+                        }}
+                    >
+                        {PARTICIPANT_STATUS_MESSAGE[userParticipant.status]}
+                    </span>
+                </p>
+            )}
         </div>
     );
 };
