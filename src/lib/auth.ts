@@ -1,5 +1,5 @@
 import {
-    User,
+    User as FirebaseUser,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signInWithPopup
@@ -10,7 +10,11 @@ import { firebaseUserToUser } from "./transformers/firebase.transformers";
 import { useMainStore } from "./store/store";
 import { createUser, getUser } from "./api/users.api";
 
-const handleAuthenticatedUser = async (firebaseUser: User, providerId: AuthProvider) => {
+export const updateSessionUser = (user: User) => {
+    localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, JSON.stringify(user));
+};
+
+const handleAuthenticatedUser = async (firebaseUser: FirebaseUser, providerId: AuthProvider) => {
     const user = firebaseUserToUser(firebaseUser, providerId);
 
     const dbUser = await getUser(user.id);
@@ -19,13 +23,12 @@ const handleAuthenticatedUser = async (firebaseUser: User, providerId: AuthProvi
         await createUser(user);
     }
 
-    localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, JSON.stringify(user));
+    updateSessionUser(user);
     useMainStore.getState().setUser(user);
 };
 
 export const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
-    console.log(result);
     await handleAuthenticatedUser(result.user, result.providerId);
 };
 

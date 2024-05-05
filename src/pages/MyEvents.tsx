@@ -7,6 +7,7 @@ import { EventCard } from "../components/EventCard";
 import { useUserBookedEvents } from "../lib/hooks/api/useUserBookedEvents";
 import { PropsWithChildren } from "react";
 import { useDisclosure } from "../lib/hooks/useDisclosure";
+import { EventCardsContainer } from "../components/UI/EventCardsContainer";
 
 type EventsAccordeonProps = PropsWithChildren & {
     title: string;
@@ -37,7 +38,7 @@ export const MyEvents = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <p className="text-2xl font-semibold">Events</p>
+            <p className="text-2xl font-semibold">Your events</p>
             <Navbar />
             <div
                 className="fixed bottom-14 right-4 rounded-full bg-crimson bg-opacity-75 p-4"
@@ -47,18 +48,18 @@ export const MyEvents = () => {
             </div>
 
             <EventsAccordeon title={`(${data?.length}) Your events`}>
-                <div className="mb-8 flex flex-col gap-4">
+                <EventCardsContainer>
                     {data?.map(event => {
                         return <EventCard key={event.id} event={event} withAdminPanel />;
                     })}
-                </div>
+                </EventCardsContainer>
             </EventsAccordeon>
             <EventsAccordeon title={`(${bookedEvents?.length}) Booked events`}>
-                <div className="mb-8 flex flex-col gap-4">
+                <EventCardsContainer>
                     {bookedEvents?.map(event => {
                         return <EventCard key={event.id} event={event} />;
                     })}
-                </div>
+                </EventCardsContainer>
             </EventsAccordeon>
 
             <EventFormModal />

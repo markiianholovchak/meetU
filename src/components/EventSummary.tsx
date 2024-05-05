@@ -1,42 +1,70 @@
 import dayjs from "dayjs";
 import { useSWRConfig } from "swr";
 import { leaveEvent, takePartInEvent } from "../lib/api/events.api";
-import { PATH_EVENT_DETAILS, PATH_EVENT_SETTINGS } from "../lib/paths";
+import { PATH_EVENT_DETAILS, PATH_EVENT_SETTINGS, PATH_LOGIN } from "../lib/paths";
 import { useMainStore } from "../lib/store/store";
 import { Button } from "./UI/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useDeviceType from "../lib/hooks/useDeviceType";
 
 type TakePartButtonProps = {
     event: CreatedEvent;
 };
 
 export const TakePartButton = ({ event }: TakePartButtonProps) => {
-    const user = useMainStore(state => state.user)!;
+    const user = useMainStore(state => state.user);
+    const setSelectedEvent = useMainStore(state => state.setSelectedEvent);
+    const { isMobile } = useDeviceType();
+    const navigate = useNavigate();
+    const { mutate } = useSWRConfig();
+
+    if (!user)
+        return (
+            <Link
+                to={PATH_LOGIN}
+                onClick={() => setSelectedEvent(null)}
+                className="rounded-md bg-crimson px-2 py-1 text-center text-sm"
+            >
+                Log in
+            </Link>
+        );
+
+    if (event.accessType === "private") return null;
+
     const userParticipant = event.participants.find(participant => participant.user.id === user.id);
     const isUserOwner = event.createdBy?.id === user.id;
     const hasUserJoinedEvent = !!userParticipant;
 
-    const { mutate } = useSWRConfig();
+    const placesLeft = event.maxParticipants
+        ? event.maxParticipants - event.participants.length
+        : null;
 
     const handleLeaveEvent = async () => {
         if (!userParticipant) return;
         await leaveEvent(event.id, userParticipant.id);
-        mutate(PATH_EVENT_DETAILS(event.id));
     };
 
     const takePart = async () => {
+        if (placesLeft && placesLeft <= 0) return;
         await takePartInEvent(event.id, user.id);
-        mutate(PATH_EVENT_DETAILS(event.id));
+    };
+
+    const handleManage = () => {
+        if (isMobile) {
+            navigate(PATH_EVENT_SETTINGS(event.id));
+            return;
+        }
+        setSelectedEvent({
+            id: event.id,
+            mode: "manage"
+        });
     };
 
     if (isUserOwner) {
         return (
-            <Link
-                className="rounded-md bg-crimson px-4 py-2 text-center text-sm"
-                to={PATH_EVENT_SETTINGS(event.id)}
-            >
+            <Button className="text-xs" onClick={handleManage}>
                 Manage
-            </Link>
+            </Button>
         );
     }
 

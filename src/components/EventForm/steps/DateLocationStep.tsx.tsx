@@ -51,7 +51,7 @@ const LocationAutocomplete = () => {
 
     return (
         <div>
-            <div className="relative">
+            <div className="relative z-[10]">
                 <Combobox>
                     <div className="flex items-center gap-2 rounded-md bg-darkGray px-3 py-2">
                         <Combobox.Input
@@ -62,7 +62,7 @@ const LocationAutocomplete = () => {
                             className={`w-full bg-transparent placeholder:text-sm placeholder:text-primaryText placeholder:opacity-50`}
                             placeholder={"Search locations"}
                         />
-                        <Combobox.Options className="absolute left-0 top-full flex flex-col gap-2 bg-darkGray p-4">
+                        <Combobox.Options className="absolute left-0 top-full flex max-h-[100px] flex-col gap-2 overflow-auto bg-darkGray p-4">
                             {data.map(place => {
                                 return (
                                     <Combobox.Option

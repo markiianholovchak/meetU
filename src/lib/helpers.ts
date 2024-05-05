@@ -39,5 +39,19 @@ export const isEmailValid = (email: string) => {
 };
 
 export const isPasswordValid = (password: string) => {
-    return PASSWORD_REGEX.test(password);
+    return password.length >= 8;
+};
+
+export const determineDeviceTypeByUserAgent = () => {
+    const userAgent = typeof window.navigator === "undefined" ? "" : navigator.userAgent;
+    const mobile = Boolean(
+        userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i)
+    );
+    return {
+        isMobile: mobile
+    };
+};
+
+export const getAvatarUrl = (user?: User) => {
+    return user?.image || "/images/avatar-placeholder.png";
 };

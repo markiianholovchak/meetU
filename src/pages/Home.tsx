@@ -8,6 +8,7 @@ import { useSearchEvents } from "../lib/hooks/api/useSearchEvents";
 import { coordinatesToAddress } from "../lib/helpers";
 import { IoClose } from "react-icons/io5";
 import { FaMapMarkerAlt, FaMarker } from "react-icons/fa";
+import { EventCardsContainer } from "../components/UI/EventCardsContainer";
 
 const CATEGORIES = ["Sport", "Culture", "Drinks", "Science", "Clubs", "Travel"];
 
@@ -79,6 +80,7 @@ export const HomePage = () => {
             });
         });
     }, []);
+
     return (
         <>
             <div className="flex flex-col gap-2">
@@ -90,7 +92,9 @@ export const HomePage = () => {
                         </div>
                     )}
 
-                    <p className="text-2xl font-semibold">Hey, {user?.name}!</p>
+                    <p className="text-2xl font-semibold">
+                        {user ? `Hey, ${user.name}` : "Welcome to meetU!"}
+                    </p>
                     <Input
                         value={query}
                         onChange={setQuery}
@@ -98,7 +102,7 @@ export const HomePage = () => {
                         leftIcon={<IoIosSearch className="h-6 w-6" />}
                     />
                     <CategoriesList />
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2 md:flex-col md:items-start">
                         <p className="font-semibold">Events in your location: </p>
                         {categoryFilter && (
                             <CategoryChip
@@ -108,12 +112,12 @@ export const HomePage = () => {
                             />
                         )}
                     </div>
-                    <div className="mb-8 flex flex-col gap-4">
+                    <EventCardsContainer>
                         {isLoading && <p>Loading...</p>}
                         {filteredData?.map(event => {
                             return <EventCard key={event.id} event={event} />;
                         })}
-                    </div>
+                    </EventCardsContainer>
                 </div>
             </div>
             <Navbar />

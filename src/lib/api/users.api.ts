@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 
 export const getUser = async (id: string): Promise<User | null> => {
@@ -15,4 +15,8 @@ export const getUser = async (id: string): Promise<User | null> => {
 
 export const createUser = async (user: User) => {
     await setDoc(doc(db, "users", user.id), user);
+};
+
+export const updateUser = async (id: string, data: Partial<User>) => {
+    await updateDoc(doc(db, "users", id), data);
 };

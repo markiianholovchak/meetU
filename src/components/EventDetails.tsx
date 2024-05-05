@@ -1,18 +1,23 @@
-import { useParams } from "react-router-dom";
-import { Map } from "../components/Map";
 import { useEventDetails } from "../lib/hooks/api/useEventDetails";
-import { EventSummary, TakePartButton } from "../components/EventSummary";
-import { EventHeader } from "../components/UI/EventHeader";
+import { EventHeader } from "./UI/EventHeader";
+import { Map } from "./Map";
+import { EventSummary, TakePartButton } from "./EventSummary";
+import { getAvatarUrl } from "../lib/helpers";
 
-export const EventDetails = () => {
-    const { id } = useParams();
+type EventDetailsProps = {
+    eventId: string;
+};
+export const EventDetails = ({ eventId }: EventDetailsProps) => {
+    const { data: event } = useEventDetails(eventId);
 
-    const { data: event } = useEventDetails(id);
+    console.log(event, eventId);
 
-    if (!event) return <div>Loading...</div>;
+    if (!event) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div>
+        <>
             <EventHeader title={event.title} />
             <div className="mt-6 flex flex-col gap-4">
                 <EventSummary event={event} />
@@ -21,7 +26,7 @@ export const EventDetails = () => {
                         <p className="text-sm font-medium">Organizer:</p>
                         <div className="mt-2 flex items-center gap-2">
                             <img
-                                src={event.createdBy.image || ""}
+                                src={getAvatarUrl(event.createdBy)}
                                 alt="Avatar"
                                 className="h-8 w-8 rounded-full border-border"
                             />
@@ -42,6 +47,6 @@ export const EventDetails = () => {
 
                 <TakePartButton event={event} />
             </div>
-        </div>
+        </>
     );
 };

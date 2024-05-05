@@ -9,6 +9,7 @@ import { ParticipantsStep } from "./steps/ParticipantsStep";
 import { mutate } from "swr";
 import { USER_CREATED_EVENTS } from "../../lib/paths";
 import { useMemo } from "react";
+import useDeviceType from "../../lib/hooks/useDeviceType";
 
 const steps = [
     {
@@ -143,15 +144,16 @@ const EventForm = () => {
 export const EventFormModal = () => {
     const setEventFormOpen = useMainStore(state => state.setIsEventFormOpen);
     const isOpen = useMainStore(state => state.isEventFormOpen);
+    const { isMobile } = useDeviceType();
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={() => setEventFormOpen(false)}
             onOpen={() => setEventFormOpen(true)}
-            isFullScreen
+            isFullScreen={isMobile}
         >
-            <div className="flex flex-col gap-6 px-4 py-6">
+            <div className="flex h-full flex-col gap-6 rounded-lg border border-gray-700 px-4 py-6 sm:w-[550px]">
                 <EventForm />
             </div>
         </Modal>
