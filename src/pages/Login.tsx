@@ -7,6 +7,7 @@ import { Button } from "../components/UI/Button";
 import { IconGoogle } from "../lib/assets/icons";
 import { PATH_REGISTER } from "../lib/paths";
 import { FormErrorField } from "../components/UI/FormErrorField";
+import { AuthPageLayout } from "../components/UI/AuthPageLayout";
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -23,9 +24,7 @@ export const LoginPage = () => {
     }, [user]);
 
     return (
-        <div className="flex flex-col gap-6">
-            <p className="text-center text-2xl font-semibold">meetU</p>
-
+        <AuthPageLayout>
             <div className="flex flex-col gap-4">
                 <form
                     className="flex flex-col gap-4"
@@ -77,6 +76,6 @@ export const LoginPage = () => {
                     Google
                 </button>
             </div>
-        </div>
+        </AuthPageLayout>
     );
 };

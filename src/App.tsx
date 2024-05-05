@@ -5,7 +5,7 @@ import { LoginPage } from "./pages/Login";
 import { StoreInitializer } from "./components/StoreInitializer";
 import { ProfilePage } from "./pages/Profile";
 import { RequiresAuth } from "./components/RequitesAuth";
-import { EventDetails } from "./pages/EventDetails";
+import { EventDetailsPage } from "./pages/EventDetailsPage";
 import {
     PATH_EVENT_SETTINGS_TEMPLATE,
     PATH_EVENT_TEMPLATE,
@@ -16,8 +16,9 @@ import {
     PATH_REGISTER
 } from "./lib/paths";
 import { MyEvents } from "./pages/MyEvents";
-import { EventSettings } from "./pages/EventSettings";
+import { EventSettingsPage } from "./pages/EventSettingsPage";
 import { RegisterPage } from "./pages/Register";
+import { EventDetailsModal } from "./components/EventDetailsModal";
 
 function App() {
     return (
@@ -28,8 +29,15 @@ function App() {
                 <Route path={PATH_HOME} element={<HomePage />} />
                 <Route path={PATH_LOGIN} element={<LoginPage />} />
                 <Route path={PATH_REGISTER} element={<RegisterPage />} />
-                <Route path={PATH_MY_EVENTS} element={<MyEvents />} />
-                <Route path={PATH_EVENT_SETTINGS_TEMPLATE} element={<EventSettings />} />
+                <Route
+                    path={PATH_MY_EVENTS}
+                    element={
+                        <RequiresAuth>
+                            <MyEvents />
+                        </RequiresAuth>
+                    }
+                />
+                <Route path={PATH_EVENT_SETTINGS_TEMPLATE} element={<EventSettingsPage />} />
                 <Route
                     path={PATH_PROFILE}
                     element={
@@ -38,15 +46,9 @@ function App() {
                         </RequiresAuth>
                     }
                 />
-                <Route
-                    path={PATH_EVENT_TEMPLATE}
-                    element={
-                        <RequiresAuth>
-                            <EventDetails />
-                        </RequiresAuth>
-                    }
-                />
+                <Route path={PATH_EVENT_TEMPLATE} element={<EventDetailsPage />} />
             </Routes>
+            <EventDetailsModal />
         </div>
     );
 }

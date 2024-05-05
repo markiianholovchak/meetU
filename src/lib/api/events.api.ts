@@ -5,6 +5,7 @@ import {
     doc,
     getDoc,
     getDocs,
+    onSnapshot,
     or,
     query,
     updateDoc,
@@ -13,6 +14,8 @@ import {
 import { db } from "../config/firebase-config";
 import { fireBaseEventDocToEvent } from "../transformers/firebase.transformers";
 import { getUser } from "./users.api";
+import { mutate } from "swr";
+import { PATH_EVENT_DETAILS } from "../paths";
 
 export const createEvent = async (event: CreateEventData, user: User): Promise<CreatedEvent> => {
     const docRef = await addDoc(collection(db, "events"), { ...event, createdById: user.id });
@@ -49,6 +52,10 @@ export const getEvent = async (id: string): Promise<CreatedEvent | null> => {
     const createdBy = data.createdById ? await getUser(data.createdById) : null;
     const participants = await getEventParticipants(id);
     const event = fireBaseEventDocToEvent(id, data, createdBy);
+
+    onSnapshot(ref, doc => {
+        mutate(PATH_EVENT_DETAILS(id));
+    });
 
     return { ...event, participants };
 };

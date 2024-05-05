@@ -8,6 +8,7 @@ import { isEmailValid, isPasswordValid } from "../lib/helpers";
 import { signUpWithEmailAndPassword } from "../lib/auth";
 import { FormErrorField } from "../components/UI/FormErrorField";
 import { FirebaseError } from "firebase/app";
+import { AuthPageLayout } from "../components/UI/AuthPageLayout";
 
 const FirebaseAuthErrorMessages: Record<string, string> = {
     "auth/email-already-in-use": "Email already taken"
@@ -30,10 +31,12 @@ export const RegisterPage = () => {
         setIsLoading(true);
         if (!isEmailValid(email)) {
             setError("Email is not valid");
+            setIsLoading(false);
             return;
         }
         if (!isPasswordValid(password)) {
             setError("Password should be at least 8 characters, have a number and a upper letter");
+            setIsLoading(false);
             return;
         }
 
@@ -52,14 +55,17 @@ export const RegisterPage = () => {
     };
 
     useEffect(() => {
+        setError("");
+    }, [email, password, username]);
+
+    useEffect(() => {
         if (user) {
             navigate("/");
         }
     }, [user]);
 
     return (
-        <div className="flex flex-col gap-6">
-            <p className="text-center text-2xl font-semibold">meetU</p>
+        <AuthPageLayout>
             <form onSubmit={signUp}>
                 <div className="flex flex-col gap-4">
                     <Input
@@ -100,6 +106,6 @@ export const RegisterPage = () => {
                     </div>
                 </div>
             </form>
-        </div>
+        </AuthPageLayout>
     );
 };

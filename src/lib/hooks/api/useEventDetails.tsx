@@ -2,7 +2,7 @@ import useSWR, { Fetcher, SWRConfiguration } from "swr";
 import { getEvent } from "../../api/events.api";
 import { PATH_EVENT_DETAILS } from "../../paths";
 
-export const useEventDetails = (eventId?: string, options?: SWRConfiguration) => {
+export const useEventDetails = (eventId?: string | null, options?: SWRConfiguration) => {
     const fetcher: Fetcher<CreatedEvent | null, string> = async key => {
         if (!eventId) return null;
         const events = await getEvent(eventId);

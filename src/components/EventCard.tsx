@@ -8,6 +8,7 @@ import { deleteEvent } from "../lib/api/events.api";
 import { useSWRConfig } from "swr";
 import { PATH_EVENT_SETTINGS, USER_CREATED_EVENTS } from "../lib/paths";
 import { MouseEvent } from "react";
+import useDeviceType from "../lib/hooks/useDeviceType";
 
 type AdminPanelProps = {
     event: CreatedEvent;
@@ -15,6 +16,9 @@ type AdminPanelProps = {
 const AdminPanel = ({ event }: AdminPanelProps) => {
     const user = useMainStore(state => state.user);
     const { mutate } = useSWRConfig();
+    const setSelectedEvent = useMainStore(state => state.setSelectedEvent);
+    const { isMobile } = useDeviceType();
+    const navigate = useNavigate();
 
     const isOwner = event.createdBy?.id === user?.id;
     if (!isOwner) return <></>;
@@ -27,11 +31,25 @@ const AdminPanel = ({ event }: AdminPanelProps) => {
         mutate(USER_CREATED_EVENTS(user.id));
     };
 
+    const handleManage = () => {
+        if (isMobile) {
+            navigate(PATH_EVENT_SETTINGS(event.id));
+            return;
+        }
+        setSelectedEvent({
+            id: event.id,
+            mode: "manage"
+        });
+    };
+
     return (
         <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-            <Link to={PATH_EVENT_SETTINGS(event.id)}>
-                <p className="text-xs">Manage</p>
-            </Link>
+            <button>
+                <p className="text-xs" onClick={handleManage}>
+                    Manage
+                </p>
+            </button>
+
             <FaTrashCan onClick={handleDelete} />
         </div>
     );
@@ -44,13 +62,25 @@ type EventCardProps = {
 
 export const EventCard = ({ event, withAdminPanel }: EventCardProps) => {
     const navigate = useNavigate();
+    const setSelectedEvent = useMainStore(state => state.setSelectedEvent);
+    const { isMobile } = useDeviceType();
 
     const goToEventPage = () => {
-        navigate(`/event/${event.id}`);
+        if (isMobile) {
+            navigate(`/event/${event.id}`);
+            return;
+        }
+        setSelectedEvent({
+            id: event.id,
+            mode: "view"
+        });
     };
 
     return (
-        <div className=" relative h-[160px] w-full cursor-pointer " onClick={goToEventPage}>
+        <div
+            className=" relative h-[160px] w-full cursor-pointer md:w-[300px] "
+            onClick={goToEventPage}
+        >
             <img
                 src={event.coverImage}
                 className="absolute bottom-0 left-0 right-0 top-0 z-[-1] h-full w-full rounded-xl object-cover object-center"
@@ -71,7 +101,7 @@ export const EventCard = ({ event, withAdminPanel }: EventCardProps) => {
                         <p className="font-semibold">{event.title}</p>
                         <div className="flex items-center gap-1 ">
                             <IoLocationOutline />
-                            <p className="text-xs">
+                            <p className="w-[120px] truncate text-xs">
                                 {event.locationType === "offline" ? event.location : "Online"}
                             </p>
                         </div>

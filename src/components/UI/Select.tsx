@@ -25,11 +25,9 @@ export function Select<T>({ selected, onChange, placeholder, options }: SelectPr
             className={
                 "relative  flex cursor-pointer items-center justify-center rounded-md bg-darkGray  px-4  py-2  text-center text-sm font-medium outline-1 outline-purple-900"
             }
+            ref={refs.setReference}
         >
-            <Listbox.Button
-                className={"flex w-full items-center justify-between"}
-                ref={refs.setReference}
-            >
+            <Listbox.Button className={"flex w-full items-center justify-between"}>
                 {selected ? (
                     <span>
                         {handleEmptyString(
@@ -47,7 +45,7 @@ export function Select<T>({ selected, onChange, placeholder, options }: SelectPr
                         <div
                             ref={refs.setFloating}
                             className={
-                                "border-gray-border mt-2 flex w-max list-none flex-col  gap-3 rounded-lg border bg-darkGray p-4"
+                                "border-gray-border mt-2 flex w-max min-w-[150px] list-none flex-col gap-3 rounded-lg border bg-darkGray p-4 text-left"
                             }
                             style={{
                                 position: strategy,
@@ -65,7 +63,7 @@ export function Select<T>({ selected, onChange, placeholder, options }: SelectPr
                                     >
                                         {({ active }) => (
                                             <div
-                                                className={`h-full w-full ${
+                                                className={`h-full w-full border-b border-b-gray-700 ${
                                                     active ? "text-crimson" : ""
                                                 }`}
                                             >

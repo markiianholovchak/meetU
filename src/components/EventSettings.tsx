@@ -1,12 +1,14 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { EventSummary } from "../components/EventSummary";
-import { useEventDetails } from "../lib/hooks/api/useEventDetails";
-import { Button } from "../components/UI/Button";
-import { deleteEvent, updateParticipant } from "../lib/api/events.api";
+import { useNavigate } from "react-router-dom";
 import { useSWRConfig } from "swr";
-import { PATH_EVENT_DETAILS, PATH_MY_EVENTS } from "../lib/paths";
-import { EventHeader } from "../components/UI/EventHeader";
-
+import { updateParticipant, deleteEvent } from "../lib/api/events.api";
+import { useEventDetails } from "../lib/hooks/api/useEventDetails";
+import { PATH_EVENT_DETAILS, PATH_MY_EVENTS, USER_CREATED_EVENTS } from "../lib/paths";
+import { EventSummary } from "./EventSummary";
+import { Button } from "./UI/Button";
+import { EventHeader } from "./UI/EventHeader";
+import { useMainStore } from "../lib/store/store";
+import { getAvatarUrl } from "../lib/helpers";
+import { useEffect } from "react";
 type ParticipantItemProps = {
     eventId: string;
     participant: Participant;
@@ -24,7 +26,7 @@ const ParticipantItem = ({ participant, eventId }: ParticipantItemProps) => {
             <div className="flex items-center gap-2">
                 <img
                     className="h-10 w-10 rounded-full border border-darkGray"
-                    src={participant.user.image || ""}
+                    src={getAvatarUrl(participant.user)}
                     alt="Participant avatar "
                 />
                 <p>{participant.user.name || participant.user.email}</p>
@@ -63,23 +65,37 @@ const ParticipantItem = ({ participant, eventId }: ParticipantItemProps) => {
     );
 };
 
-export const EventSettings = () => {
-    const { id } = useParams();
-
-    const { data: event } = useEventDetails(id);
+type EventSettingsProps = {
+    eventId: string;
+};
+export const EventSettings = ({ eventId }: EventSettingsProps) => {
+    const setSelectedEvent = useMainStore(state => state.setSelectedEvent);
+    const user = useMainStore(state => state.user)!;
+    const { data: event } = useEventDetails(eventId);
     const navigate = useNavigate();
+    const { mutate } = useSWRConfig();
+
+    useEffect(() => {
+        if (!event) return;
+
+        navigator.vibrate(200);
+    }, [event?.participants.length]);
 
     if (!event) return <div>Loading...</div>;
 
     const handleDelete = async () => {
+        setSelectedEvent(null);
         await deleteEvent(event.id);
+        mutate(USER_CREATED_EVENTS(user.id));
         navigate(PATH_MY_EVENTS);
     };
 
     return (
-        <div className="flex flex-col gap-4">
+        <>
             <EventHeader title={event.title} />
-            <EventSummary event={event} isAdminPage />
+            <div className="mt-6">
+                <EventSummary event={event} isAdminPage />
+            </div>
             <div>
                 <p className="mb-2 text-sm  ">Participants:</p>
                 <div>
@@ -99,6 +115,6 @@ export const EventSettings = () => {
                     Delete event
                 </Button>
             </div>
-        </div>
+        </>
     );
 };

@@ -11,6 +11,8 @@ export type GlobalSlice = {
     setUserLocation: (
         userLocation: { address: string; coordinates: MapCoordinates } | null
     ) => void;
+    selectedEvent: { id: string; mode: "view" | "manage" } | null;
+    setSelectedEvent: (data: { id: string; mode: "view" | "manage" } | null) => void;
 };
 export const createGlobalSlice: StateCreator<GlobalSlice, [], [], GlobalSlice> = (set, get) => ({
     user: null,
@@ -19,5 +21,7 @@ export const createGlobalSlice: StateCreator<GlobalSlice, [], [], GlobalSlice> =
     setCategoryFilter: categoryFilter => set({ categoryFilter }),
     userCoordinates: null,
     userLocation: null,
-    setUserLocation: userLocation => set({ userLocation })
+    setUserLocation: userLocation => set({ userLocation }),
+    selectedEvent: null,
+    setSelectedEvent: data => set({ selectedEvent: data })
 });
