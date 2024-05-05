@@ -49,7 +49,7 @@ function Modal({ isOpen, onClose, onOpen, isFullScreen, children }: ModalCompone
     return (
         <FloatingPortal>
             <FloatingOverlay
-                className="bg-gray-450 z-[20] grid place-items-center bg-opacity-50 backdrop-blur-sm"
+                className="z-[20] grid place-items-center bg-gray-700 bg-opacity-50 backdrop-blur-sm"
                 lockScroll
             >
                 <FloatingFocusManager context={context} modal>

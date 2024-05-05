@@ -7,6 +7,7 @@ module.exports ={
       extend: {
         colors: {
           crimson: "#FF345E",
+          lime: "#00C82A",
           darkGray: "#31363F",
           border: "#3E4550",
           primaryText: "#EEEEEE",

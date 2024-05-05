@@ -1,4 +1,3 @@
-import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/Home";
 import { LoginPage } from "./pages/Login";
@@ -22,7 +21,7 @@ import { EventDetailsModal } from "./components/EventDetailsModal";
 
 function App() {
     return (
-        <div className="App px-4 py-6">
+        <div className="App px-4 py-6 md:px-12 md:py-12">
             <StoreInitializer />
 
             <Routes>

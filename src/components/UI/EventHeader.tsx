@@ -12,8 +12,8 @@ export const EventHeader = ({ title }: EventHeaderProps) => {
     const { isMobile } = useDeviceType();
     const setSelectedEvent = useMainStore(state => state.setSelectedEvent);
     return (
-        <div className="flex items-center justify-between">
-            {isMobile ? (
+        <div className="flex items-center justify-between md:justify-center">
+            {isMobile && (
                 <Button
                     variant="unstyled"
                     className="rounded-md border border-border p-2"
@@ -23,17 +23,17 @@ export const EventHeader = ({ title }: EventHeaderProps) => {
                 >
                     <FaChevronLeft className="h-6 w-6" />
                 </Button>
-            ) : (
-                <div className="h-6 w-6" />
             )}
 
             <p className="text-2xl font-medium">{title}</p>
 
-            <div className="w-max rounded-full border border-border p-2">
-                <Link to={"/profile"} onClick={() => setSelectedEvent(null)}>
-                    <FaRegUser className="h-6 w-6 fill-current" />
-                </Link>
-            </div>
+            {isMobile && (
+                <div className="w-max rounded-full border border-border p-2">
+                    <Link to={"/profile"} onClick={() => setSelectedEvent(null)}>
+                        <FaRegUser className="h-6 w-6 fill-current" />
+                    </Link>
+                </div>
+            )}
         </div>
     );
 };

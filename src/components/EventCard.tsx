@@ -9,6 +9,7 @@ import { useSWRConfig } from "swr";
 import { PATH_EVENT_SETTINGS, USER_CREATED_EVENTS } from "../lib/paths";
 import { MouseEvent } from "react";
 import useDeviceType from "../lib/hooks/useDeviceType";
+import { getEventCoverUrl } from "../lib/helpers";
 
 type AdminPanelProps = {
     event: CreatedEvent;
@@ -82,7 +83,7 @@ export const EventCard = ({ event, withAdminPanel }: EventCardProps) => {
             onClick={goToEventPage}
         >
             <img
-                src={event.coverImage}
+                src={getEventCoverUrl(event)}
                 className="absolute bottom-0 left-0 right-0 top-0 z-[-1] h-full w-full rounded-xl object-cover object-center"
                 alt="Event cover"
             />

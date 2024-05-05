@@ -55,3 +55,7 @@ export const determineDeviceTypeByUserAgent = () => {
 export const getAvatarUrl = (user?: User) => {
     return user?.image || "/images/avatar-placeholder.png";
 };
+
+export const getEventCoverUrl = (event: CreatedEvent) => {
+    return event?.coverImage || "/images/event-cover-placeholder.jpeg";
+};

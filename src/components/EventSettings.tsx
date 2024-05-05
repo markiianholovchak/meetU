@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSWRConfig } from "swr";
-import { updateParticipant, deleteEvent } from "../lib/api/events.api";
+import { updateParticipant, deleteEvent, leaveEvent } from "../lib/api/events.api";
 import { useEventDetails } from "../lib/hooks/api/useEventDetails";
 import { PATH_EVENT_DETAILS, PATH_MY_EVENTS, USER_CREATED_EVENTS } from "../lib/paths";
 import { EventSummary } from "./EventSummary";
@@ -9,6 +9,8 @@ import { EventHeader } from "./UI/EventHeader";
 import { useMainStore } from "../lib/store/store";
 import { getAvatarUrl } from "../lib/helpers";
 import { useEffect } from "react";
+import { IoTrashBin } from "react-icons/io5";
+import { FaTrashCan } from "react-icons/fa6";
 type ParticipantItemProps = {
     eventId: string;
     participant: Participant;
@@ -60,6 +62,14 @@ const ParticipantItem = ({ participant, eventId }: ParticipantItemProps) => {
                         </Button>
                     </>
                 )}
+                <Button
+                    variant="unstyled"
+                    onClick={() => {
+                        leaveEvent(eventId, participant.id);
+                    }}
+                >
+                    <FaTrashCan />
+                </Button>
             </div>
         </div>
     );
