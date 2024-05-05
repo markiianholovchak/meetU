@@ -8,7 +8,7 @@ export const RequiresAuth = ({ children }: RequiresAuthProps) => {
     const navigate = useNavigate();
     useEffect(() => {
         !user && navigate("/login");
-    }, [user]);
+    }, [user, navigate]);
 
     if (user) return <>{children}</>;
     return null;

@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
-import { useSWRConfig } from "swr";
 import { leaveEvent, takePartInEvent } from "../lib/api/events.api";
-import { PATH_EVENT_DETAILS, PATH_EVENT_SETTINGS, PATH_LOGIN } from "../lib/paths";
+import { PATH_EVENT_SETTINGS, PATH_LOGIN } from "../lib/paths";
 import { useMainStore } from "../lib/store/store";
 import { Button } from "./UI/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,7 +15,6 @@ export const TakePartButton = ({ event }: TakePartButtonProps) => {
     const setSelectedEvent = useMainStore(state => state.setSelectedEvent);
     const { isMobile } = useDeviceType();
     const navigate = useNavigate();
-    const { mutate } = useSWRConfig();
 
     if (!user)
         return (

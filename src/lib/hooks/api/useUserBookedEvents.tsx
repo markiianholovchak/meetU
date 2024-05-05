@@ -1,5 +1,5 @@
 import useSWR, { Fetcher, SWRConfiguration } from "swr";
-import { getUserBookedEvents, getUserCreatedEvents } from "../../api/events.api";
+import { getUserBookedEvents } from "../../api/events.api";
 import { USER_BOOKED_EVENTS } from "../../paths";
 
 export const useUserBookedEvents = (userId: string, options?: SWRConfiguration) => {

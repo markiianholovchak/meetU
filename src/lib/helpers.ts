@@ -1,4 +1,4 @@
-import { EMAIL_REGEX, GOOGLE_API_KEY, PASSWORD_REGEX } from "./constants/general.constants";
+import { EMAIL_REGEX, GOOGLE_API_KEY } from "./constants/general.constants";
 
 export const handleEmptyString = (title: string) => {
     if (!title.length) return "No value";
