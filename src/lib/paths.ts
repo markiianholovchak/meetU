@@ -4,6 +4,7 @@ export const PATH_EVENT_TEMPLATE = "/event/:id";
 export const PATH_EVENT_DETAILS = (id: string) => "/event/" + id;
 export const PATH_MY_EVENTS = "/my-events";
 export const PATH_LOGIN = "/login";
+export const PATH_REGISTER = "/register";
 
 export const PATH_EVENTS_SEARCH = (query: string) => `/events/search?=${query}`;
 

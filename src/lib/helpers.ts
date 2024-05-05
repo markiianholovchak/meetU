@@ -1,4 +1,4 @@
-import { GOOGLE_API_KEY } from "./constants/general.constants";
+import { EMAIL_REGEX, GOOGLE_API_KEY, PASSWORD_REGEX } from "./constants/general.constants";
 
 export const handleEmptyString = (title: string) => {
     if (!title.length) return "No value";
@@ -24,8 +24,6 @@ export const createEmptyEvent = (): CreateEventData => {
     };
 };
 
-console.log(process.env.REACT_APP_GOOGLE_API_KEY, "key");
-
 export const coordinatesToAddress = async (coordinates: MapCoordinates) => {
     const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&key=${GOOGLE_API_KEY}`
@@ -34,4 +32,12 @@ export const coordinatesToAddress = async (coordinates: MapCoordinates) => {
     const data = await response.json();
 
     return data.results[0]?.formatted_address as string;
+};
+
+export const isEmailValid = (email: string) => {
+    return EMAIL_REGEX.test(email);
+};
+
+export const isPasswordValid = (password: string) => {
+    return PASSWORD_REGEX.test(password);
 };
