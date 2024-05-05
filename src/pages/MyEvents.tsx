@@ -47,14 +47,16 @@ export const MyEvents = () => {
                 <FaPlus />
             </div>
 
-            <EventsAccordeon title={`(${data?.length}) Your events`}>
+            <EventsAccordeon title={`${!!data?.length ? `(${data?.length})` : ""} Your events`}>
                 <EventCardsContainer>
                     {data?.map(event => {
                         return <EventCard key={event.id} event={event} withAdminPanel />;
                     })}
                 </EventCardsContainer>
             </EventsAccordeon>
-            <EventsAccordeon title={`(${bookedEvents?.length}) Booked events`}>
+            <EventsAccordeon
+                title={`${!!bookedEvents?.length ? `(${bookedEvents?.length})` : ""} Booked events`}
+            >
                 <EventCardsContainer>
                     {bookedEvents?.map(event => {
                         return <EventCard key={event.id} event={event} />;

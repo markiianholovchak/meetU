@@ -7,7 +7,8 @@ export const useDisclosure = (initialState = false) => {
         if (isOpen !== initialState) {
             setIsOpen(initialState);
         }
-    }, [initialState, isOpen]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onOpen = () => {
         setIsOpen(true);
