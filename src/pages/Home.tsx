@@ -103,7 +103,7 @@ export const HomePage = () => {
                     />
                     <CategoriesList />
                     <div className="flex items-center justify-between gap-2 md:flex-col md:items-start">
-                        <p className="font-semibold">Events in your location: </p>
+                        <p className="font-semibold">Explore events: </p>
                         {categoryFilter && (
                             <CategoryChip
                                 withCloseButton

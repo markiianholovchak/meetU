@@ -143,13 +143,19 @@ const EventForm = () => {
 
 export const EventFormModal = () => {
     const setEventFormOpen = useMainStore(state => state.setIsEventFormOpen);
+    const resetForm = useMainStore(state => state.resetForm);
     const isOpen = useMainStore(state => state.isEventFormOpen);
     const { isMobile } = useDeviceType();
+
+    const closeModal = () => {
+        setEventFormOpen(false);
+        resetForm();
+    };
 
     return (
         <Modal
             isOpen={isOpen}
-            onClose={() => setEventFormOpen(false)}
+            onClose={closeModal}
             onOpen={() => setEventFormOpen(true)}
             isFullScreen={isMobile}
         >
